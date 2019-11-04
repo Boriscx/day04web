@@ -27,7 +27,7 @@ public class TestDemo {
 
     @Test
     public void test2(){
-        String sss = "8979879879k87_46";
-        System.out.println(sss.matches("[^0-9_]*"));
+        String sss = "89798798798746";
+        System.out.println(sss.matches("[\\d_]*"));
     }
 }

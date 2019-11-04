@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBySkuId(String skuId) {
-        if (skuId == null || skuId.matches("[^\\d_]+")) return null;
+        if (skuId == null || !skuId.matches("[\\d_]+")) return null;
         return bookDao.getBySkuId(skuId);
     }
 
