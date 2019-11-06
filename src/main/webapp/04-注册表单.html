@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <style type="text/css">
+        table{
+            border:1px solid red;
+            /* 设置表格边框和单元格边框核名 */
+            border-collapse:collapse;
+
+            /* 为表格设置背景颜色或图片 */
+            background: lightgrey;
+
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+        td,th{
+            border:1px solid red;
+            /* 设置边框和内容的距离(内边距) */
+            padding: 5px;
+        }
+
+        h1{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>这是一个表格</h1>
+    <form>
+        
+        <table>
+    <tr>
+        <td>姓名</td>
+        <td><input type="text" name="name"></td>
+    </tr>
+    <tr>
+        <td>性别</td>
+        <td>
+            <input type="radio" name="sex" value="男" />男
+            <input type="radio" name="sex" value="女" />女
+        </td>
+    </tr>
+    <tr>
+        <td>爱好</td>
+        <td>
+            <input type="checkbox" name="h" value="篮球"/>
+            <input type="checkbox" name="足球" value="足球">
+            <input type="checkbox" name="排球" value="排球">
+        </td>
+    </tr>
+    <tr>
+        <td>城市:</td>
+        <td><!-- 城市 -->
+            <select><!-- 选项 -->
+                <option>北京</option>
+                <option>上海</option>
+                <option>广州</option>
+                <option>深圳</option>
+            </select>
+        </td>    
+    </tr>
+    <tr>
+        <td>自我描述:</td>
+        <td>
+            <textarea cols="30" rows="5" placeholder="请输入描述信息...."></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: center;">
+            <input type="submit" name="" value="提交">
+            <input type="reset" name="" value="重置"> 
+        </td>
+    </tr>
+</table>
+    </form>
+
+</body>
+</html>

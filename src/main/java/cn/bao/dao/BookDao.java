@@ -12,6 +12,7 @@ public interface BookDao {
 
     List<Book> getList(int linkId,int page,int size);
 
+
     List<Book> getByContentLike(String content);
     List<Book> getByContentLike(String content,int page,int size);
 
@@ -20,6 +21,10 @@ public interface BookDao {
     List<Book> getListByTitleLike(String title);
     List<Book> getListByTitleLike(String title,int page,int size);
     List<Book> getListByTitleContentLike(String title,String content,int page,int size);
+
+
+
+    boolean isHave(Book book);
 
     int insert(Book book);
     int delete(Book book);

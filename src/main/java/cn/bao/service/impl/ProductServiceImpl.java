@@ -26,17 +26,10 @@ public class ProductServiceImpl implements ProductService {
         return link == null ? null : productDao.getByLink(link);
     }
 
-    @Override
-    public List<Product> getList(String objects) {
-        return objects == null ? null : productDao.getList(objects);
-    }
 
     @Override
     public List<Product> getList(String title, int page, int size) {
-        if (page < 0) page = 1;
-        if (size < 0) size = 20;
-        if (title == null) title = "";
-        return productDao.getList(title, page, size);
+        return this.getList(title,null,page,size);
     }
 
     @Override
@@ -46,6 +39,14 @@ public class ProductServiceImpl implements ProductService {
         if (title == null) title = "";
         if (link == null) link = "";
         return productDao.getList(title, link, page, size);
+    }
+
+    @Override
+    public List<Product> getList(int maxBookCount, int page, int size) {
+        if (maxBookCount<=0) maxBookCount = 200;
+        if (page < 1 )page = 1;
+        if (size <= 0 )size = 20;
+        return productDao.getList(maxBookCount,page,size);
     }
 
     @Override

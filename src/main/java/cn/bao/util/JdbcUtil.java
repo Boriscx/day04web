@@ -1,7 +1,6 @@
 package cn.bao.util;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.sun.org.apache.xpath.internal.objects.XNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +9,12 @@ import java.sql.SQLException;
 
 public class JdbcUtil {
     private static Connection connection;
-    private static PreparedStatement statement;
+    private PreparedStatement statementUpdate;
+    private PreparedStatement statementQuery;
 
     private static ComboPooledDataSource pool = new ComboPooledDataSource();
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         try {
             connection = pool.getConnection();
             return connection;
@@ -24,15 +24,16 @@ public class JdbcUtil {
         return null;
     }
 
-    public PreparedStatement getStatement(String sql,Object... objects) {
+    public PreparedStatement getStatement(String sql, Object... objects) {
+        PreparedStatement statement = null;
         try {
-            if (connection == null || connection.isClosed()){
-                return getConnection()==null?null:getStatement(sql,objects);
-            }else{
+            if (connection == null || connection.isClosed()) {
+                return getConnection() == null ? null : getStatement(sql, objects);
+            } else {
                 statement = connection.prepareStatement(sql);
-                if (objects!=null&&objects.length>0){
-                    for (int i =0 ;i < objects.length;i++){
-                        statement.setObject(i+1,objects[i]);
+                if (objects != null && objects.length > 0) {
+                    for (int i = 0; i < objects.length; i++) {
+                        statement.setObject(i + 1, objects[i]);
                     }
                     return statement;
                 }
@@ -43,12 +44,13 @@ public class JdbcUtil {
         return null;
     }
 
-    public ResultSet getResultSet(String sql,Object... objects){
-        if (statement == null ){
-            return getStatement(sql,objects)==null?null:getResultSet(sql,objects);
-        }else {
+    public ResultSet getResultSet(String sql, Object... objects) {
+        if (statementQuery == null) {
+            statementQuery = getStatement(sql, objects);
+            return statementQuery == null ? null : getResultSet(sql, objects);
+        } else {
             try {
-                return statement.executeQuery();
+                return statementQuery.executeQuery();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -56,12 +58,13 @@ public class JdbcUtil {
         return null;
     }
 
-    public int update(String sql,Object... objects){
-        if (statement == null ){
-            return getStatement(sql,objects)==null?null:update(sql,objects);
-        }else {
+    public int update(String sql, Object... objects) {
+        if (statementUpdate == null) {
+            statementUpdate = getStatement(sql, objects);
+            return statementUpdate == null ? null : update(sql, objects);
+        } else {
             try {
-                return statement.executeUpdate();
+                return statementUpdate.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -69,15 +72,14 @@ public class JdbcUtil {
         return -1;
     }
 
-    public void close(){
-        if (connection == null)return;
-
+    public void closeStatement(PreparedStatement statement) {
+        if (statement == null) return;
         try {
-            if (!connection.isClosed()){
-                connection.close();
-            }
-        } catch (SQLException e) {
+            statement.close();
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            statement = null;
         }
     }
 }

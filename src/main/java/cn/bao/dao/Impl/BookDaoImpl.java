@@ -2,8 +2,11 @@ package cn.bao.dao.Impl;
 
 import cn.bao.dao.BookDao;
 import cn.bao.pojo.Book;
+import cn.bao.util.JdbcUtil;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,29 +136,49 @@ public class BookDaoImpl extends BaseDaoImpl implements BookDao {
         return getBookList(jdbcUtil.getResultSet(sql, title, content, (page - 1) * size, size));
     }
 
+    @Override
+    public boolean isHave(Book book) {
+        JdbcUtil jul = new JdbcUtil();
+        boolean flag = false;
+        ResultSet resultSet = jul.getResultSet("SELECT * FROM BOOK WHERE LINK=? ", book.getLink());
+        try {
+            if (resultSet != null && resultSet.next()) {
+                System.out.println("isHave " + book.getLink());
+                flag = true;
+            }
+            //jul.closeStatement((PreparedStatement) resultSet.getStatement());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
 
     @Override
     public int insert(Book book) {
+        JdbcUtil jul=new JdbcUtil();
         String sql = "INSERT INTO BOOK VALUES (NULL,?,?,?,?,?,?)";
-        return jdbcUtil.update(sql, book.getLinkId(), book.getAuthor(), book.getSkuId(), book.getTitle(), book.getContent(), book.getLink());
-
+        if (isHave(book)) {
+            return -1;
+        }
+        return jul.update(sql, book.getLinkId(), book.getAuthor(), book.getSkuId(), book.getTitle(), book.getContent(), book.getLink());
     }
 
     @Override
     public int delete(Book book) {
-        return jdbcUtil.update("DELETE FROM BOOK WHERE ID=?",book.getId());
+        return jdbcUtil.update("DELETE FROM BOOK WHERE ID=?", book.getId());
     }
 
     @Override
     public int update(Book book) {
-        return delete(book)==1?-1:insert(book);
+        String sql = "UPDATE BOOK SET LINKID=?,AUTHOR=?,SKUID=?,TITLE=?,CONTENT=?,LINK=?";
+        return jdbcUtil.update(sql, book.getLinkId(), book.getAuthor(), book.getSkuId(), book.getTitle(), book.getContent(), book.getLink());
     }
 
     @Override
     public int inserts(List<Book> books) {
         StringBuilder sql = new StringBuilder("INSERT INTO BOOK VALUES");
         List<Object> list = new ArrayList<>();
-        for (Book b : books){
+        for (Book b : books) {
             sql.append("(NULL,?,?,?,?,?,?)").append(",");
             list.add(b.getLinkId());
             list.add(b.getAuthor());
@@ -164,6 +187,6 @@ public class BookDaoImpl extends BaseDaoImpl implements BookDao {
             list.add(b.getContent());
             list.add(b.getLink());
         }
-        return jdbcUtil.update(sql.toString(),list.toArray());
+        return jdbcUtil.update(sql.toString(), list.toArray());
     }
 }

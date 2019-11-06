@@ -4,7 +4,9 @@ import cn.bao.dao.BookDao;
 import cn.bao.dao.Impl.BookDaoImpl;
 import cn.bao.pojo.Book;
 import cn.bao.pojo.Product;
+import cn.bao.service.BookService;
 import cn.bao.service.ProductService;
+import cn.bao.service.impl.BookServiceImpl;
 import cn.bao.service.impl.ProductServiceImpl;
 import org.junit.Test;
 
@@ -27,7 +29,9 @@ public class TestDemo {
 
     @Test
     public void test2(){
-        String sss = "89798798798746";
-        System.out.println(sss.matches("[\\d_]*"));
+        Book book = new Book(33531,"baochunxiao","12312341","titleTest","testContent","testLink");
+        BookService bookService = new BookServiceImpl();
+        bookService.insert(book);
+
     }
 }

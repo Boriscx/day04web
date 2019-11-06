@@ -72,15 +72,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
         return null;
     }
 
-    @Override
-    public List<Product> getList(String objects) {
-        return this.getList(objects, objects, 1, 50);
-    }
 
-    @Override
-    public List<Product> getList(String title, int page, int size) {
-        return this.getList(title, "", page, size);
-    }
 
     @Override
     public List<Product> getList(String title, String link, int page, int size) {
@@ -91,8 +83,13 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 "WHERE P.TITLE LIKE ? AND P.LINK LIKE ? " +
                 "GROUP BY P.ID " +
                 "LIMIT ?,?";
-        ArrayList<Product> list = new ArrayList<>();
+
         ResultSet re = jdbcUtil.getResultSet(sql, title, link, (page - 1) * size, size);
+        return getProductList(re);
+    }
+
+    private List<Product> getProductList(ResultSet re){
+        ArrayList<Product> list = new ArrayList<>();
         if (re != null)
             try {
                 while (re.next()) {
@@ -103,6 +100,17 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
                 System.out.println(e.getMessage());
             }
         return null;
+    }
+
+    @Override
+    public List<Product> getList(int maxBookCount, int page, int size) {
+        String sql = "SELECT P.*, COUNT(B.LINKID) HAVECOUNT FROM PRODUCT P " +
+                "LEFT JOIN BOOK B ON P.ID = B.LINKID " +
+                "GROUP BY P.ID HAVING ( HAVECOUNT = 0) AND P.COUNT < ? " +
+                "ORDER BY COUNT(B.LINKID) DESC " +
+                "LIMIT ?,?";
+        System.out.println("productDao getList:"+sql);
+        return getProductList(jdbcUtil.getResultSet(sql,maxBookCount,(page-1)*size,size));
     }
 
     @Override
