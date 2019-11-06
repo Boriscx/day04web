@@ -106,7 +106,7 @@ public class ProductDaoImpl extends BaseDaoImpl implements ProductDao {
     public List<Product> getList(int maxBookCount, int page, int size) {
         String sql = "SELECT P.*, COUNT(B.LINKID) HAVECOUNT FROM PRODUCT P " +
                 "LEFT JOIN BOOK B ON P.ID = B.LINKID " +
-                "GROUP BY P.ID HAVING ( HAVECOUNT = 0) AND P.COUNT < ? " +
+                "GROUP BY P.ID HAVING (  HAVECOUNT >= 0 AND count>(havecount+5) ) AND P.COUNT < ? " +
                 "ORDER BY COUNT(B.LINKID) DESC " +
                 "LIMIT ?,?";
         System.out.println("productDao getList:"+sql);

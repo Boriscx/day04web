@@ -1,6 +1,5 @@
-package cn.bao.controller.impl;
+package cn.bao.climbContent;
 
-import cn.bao.controller.BookController;
 import cn.bao.pojo.Book;
 import cn.bao.pojo.Product;
 import cn.bao.service.BookService;
@@ -11,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,13 +19,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class BookControllerImpl implements BookController {
+public class ClimbContent {
     private BookService bookService = new BookServiceImpl();
     private ProductService productService = new ProductServiceImpl();
     private List<Product> products;
-    private List<Book> books = new ArrayList<>();
     private LinkedList<Book> booklinks = new LinkedList<>();
-    private List<Runnable> runnables = new ArrayList<>();
     private ExecutorService pool = Executors.newFixedThreadPool(5);
 
     public void lunch() {
@@ -85,7 +81,7 @@ public class BookControllerImpl implements BookController {
                     try {
                         booklinks.wait();
                         System.out.println("test wait");
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -134,6 +130,6 @@ public class BookControllerImpl implements BookController {
     }
 
     public static void main(String[] args) {
-        new BookControllerImpl().lunch();
+        new ClimbContent().lunch();
     }
 }
