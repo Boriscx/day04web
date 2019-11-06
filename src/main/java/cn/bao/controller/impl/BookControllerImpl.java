@@ -116,7 +116,9 @@ public class BookControllerImpl implements BookController {
         content = content.replaceAll("<[\\s\\S]*?>", "").
                 replaceAll("[^\\w\\u4e00-\\u9fa5,.?!\"“”:：]+", "");
         book.setContent(content);
-        bookService.insert(book);
+        if (bookService.insert(book)<=0){
+            System.out.println("getContent is error link:"+book.getLink());
+        }
     }
 
     private void printTime() {
