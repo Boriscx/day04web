@@ -116,12 +116,13 @@ public class Book implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id &&
+        return
+//                id == book.id &&
                 linkId == book.linkId &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(skuId, book.skuId) &&
-                Objects.equals(title, book.title) &&
-                Objects.equals(content, book.content) &&
+//                Objects.equals(author, book.author) &&
+//                Objects.equals(skuId, book.skuId) &&
+//                Objects.equals(title, book.title) &&
+//                Objects.equals(content, book.content) &&
                 Objects.equals(link, book.link);
     }
 

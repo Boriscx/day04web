@@ -24,10 +24,10 @@ public class ClimbContent {
     private ProductService productService = new ProductServiceImpl();
     private List<Product> products;
     private LinkedList<Book> booklinks = new LinkedList<>();
-    private ExecutorService pool = Executors.newFixedThreadPool(5);
+    private ExecutorService pool = Executors.newFixedThreadPool(10);
 
     public void lunch() {
-        products = productService.getList(300, 1, 200);
+        products = productService.getList(300, 1, 5000);
         pool.execute(() -> test());
         for (Product p : products) {
             pool.execute(createRunnable(p));
@@ -63,15 +63,17 @@ public class ClimbContent {
             Book book = new Book(p.getId(), author, skuId, title, "", href);
             if (!books.contains(book)) books.add(book);
         }
+        p.setCount(books.size());
+        productService.update(p);
+
         synchronized (booklinks) {
-            if (books.size()<300){
+            if (books.size() < 300) {
                 booklinks.addAll(books);
                 booklinks.notifyAll();
             }
 
         }
-        p.setCount(books.size());
-        productService.update(p);
+
     }
 
     public void test() {
@@ -104,9 +106,9 @@ public class ClimbContent {
         String content = "";
         try {
             Document document = Jsoup.connect(book.getLink()).get();
-            if (document==null)return ;
+            if (document == null) return;
             Element element = document.getElementById("content");
-            if (element==null||!element.hasText())return;
+            if (element == null || !element.hasText()) return;
             content = element.text();
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +117,7 @@ public class ClimbContent {
             System.out.println("content is null");
             return;
         } else {
-            printTime();
+            printTime(book.getLinkId());
         }
         content = content.replaceAll("<[\\s\\S]*?>", "").
                 replaceAll("[^\\w\\u4e00-\\u9fa5,.?!\"“”:：]+", "");
@@ -125,8 +127,8 @@ public class ClimbContent {
         }
     }
 
-    private void printTime() {
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+    private void printTime(int linkId) {
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + " linkId:" + linkId);
     }
 
     public static void main(String[] args) {

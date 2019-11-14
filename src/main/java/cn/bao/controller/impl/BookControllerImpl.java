@@ -130,7 +130,7 @@ public class BookControllerImpl implements BookController {
     }
 
     private void printTime() {
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date())+" LINKID:"+nowLinkId);
     }
 
     public static void main(String[] args) {
